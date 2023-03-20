@@ -13,15 +13,11 @@ typedef struct _HuffNode {
 
 void sortNodes(HuffNode **nodes, int numNodes);
 
-HuffNode *createHuffmanTree(int *frequencies, unsigned int *codes);
+HuffNode *createHuffmanTree(int *frequencies);
 
 void writeTreeToFile(HuffNode *node, FILE *file);
 
 void freeTree(HuffNode *node);
 
-void printCodesHelper(HuffNode *node, unsigned int code, int depth, unsigned int *codes);
-
-void printCodes(HuffNode *root, unsigned int *codes);
-
-
+void writeTree(HuffNode *, char *, FILE *);
 #endif // MAKETREE_H

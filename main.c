@@ -2,15 +2,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include "tree.h"
-#include "koduj.h"
-#include "bit.h"
 
 int main(int argc, char *argv[]) {
     int i;
     int c;
     int frequencies[256] = {0};
-    unsigned int codes[256] = {0};
     int result = 0;
+    char str[256];
 
     FILE *in = argc > 1 ? fopen(argv[1], "r") : stdin;
 
@@ -20,31 +18,20 @@ int main(int argc, char *argv[]) {
         }
         
 
-        HuffNode *root = createHuffmanTree(frequencies, codes);
+        HuffNode *root = createHuffmanTree(frequencies);
 
         FILE *out = fopen("tree.txt", "w");
-        writeTreeToFile(root, out);
+        writeTree(root, str, out);
         fclose(out);
-
-        printCodes(root, codes);
 
         freeTree(root);
 
-FILE *wynik = fopen("output.txt", "w");
-    if (wynik == NULL) {
-        printf("Błąd: nie udało się otworzyć pliku wyjściowego\n");
-        fclose(in);
-        return 1;
-    }
 
-    // wywołanie funkcji compressFile
-    compressFile(in, wynik, codes);
+    	// zamknięcie plików
+    	fclose(in);
 
-    // zamknięcie plików
-    fclose(in);
-    fclose(wynik);
-
-    } else {
+    } 
+    else {
         printf("Nie podano nazwy pliku \n");
         return EXIT_FAILURE;
     }

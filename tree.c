@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "tree.h"
 
 void sortNodes(HuffNode **nodes, int numNodes) {
@@ -19,7 +20,7 @@ void sortNodes(HuffNode **nodes, int numNodes) {
     }
 }
 
-HuffNode *createHuffmanTree(int *frequencies, unsigned int *codes) {
+HuffNode *createHuffmanTree(int *frequencies) {
     // tworzenie węzłów z częstością wystąpień
     HuffNode **nodes = malloc(sizeof(HuffNode *) * 256);
     int numNodes = 0;
@@ -31,9 +32,6 @@ HuffNode *createHuffmanTree(int *frequencies, unsigned int *codes) {
             node->left = NULL;
             node->right = NULL;
             nodes[numNodes++] = node;
-
-            // dodawanie kodu do tablicy kodów
-            codes[i] = 0;
         }
     }
 
@@ -69,33 +67,22 @@ void freeTree(HuffNode *node) {
     }
 }
 
-void writeTreeToFile(HuffNode *node, FILE *file) {
-    // zapis drzewa w pliku
-    if (node->left == NULL && node->right == NULL) {
-        fputc('1', file);
-        fputc(node->byte, file);
-    } else {
-        fputc('0', file);
-        writeTreeToFile(node->left, file);
-        writeTreeToFile(node->right, file);
-    }
-}
+void writeTree(HuffNode *node, char *str, FILE *out) {
 
-void printCodesHelper(HuffNode *node, unsigned int code, int depth, unsigned int *codes) {
-    if (node == NULL) {
-        return;
-    }
+        if (node->left != NULL) {
+                strcat(str, "1\0");
+                writeTree(node->left, str, out);
+        }
 
-    if (node->left == NULL && node->right == NULL) {
-        // zapis kodu w tablicy kodów
-        codes[node->byte] = code;
-    } else {
-        printCodesHelper(node->left, (code << 1) | 0, depth + 1, codes);
-	printCodesHelper(node->right, (code << 1) | 1, depth + 1, codes);
-    }
-}
-void printCodes(HuffNode *root, unsigned int *codes) {
-	// wywołanie rekurencyjnej funkcji pomocniczej
-	printCodesHelper(root, 0, 0, codes);
-}
+        if (node->right != NULL) {
+                strcat(str, "0\0");
+                writeTree(node->right, str, out);
+        }
 
+        if (node->left == NULL && node->right == NULL) {
+                fprintf(out, "%d ->%s\n", node->byte, str);
+        }
+
+        if (strlen(str) > 0)
+                str[strlen(str) - 1] = '\0';
+}
