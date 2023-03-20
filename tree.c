@@ -80,7 +80,7 @@ void writeTree(HuffNode *node, char *str, FILE *out) {
         }
 
         if (node->left == NULL && node->right == NULL) {
-                fprintf(out, "%d ->%s\n", node->byte, str);
+                fprintf(out, "%d %s\n", node->byte, str);
         }
 
         if (strlen(str) > 0)

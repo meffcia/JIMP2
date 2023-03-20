@@ -4,12 +4,12 @@
 
 struct ASCII_Code {
     int ascii;
-    char binary[9]; 
+    char binary[1000]; 
 };
 
 
 int read_file(struct ASCII_Code codes[]) {
-    char line[14];
+    char line[256];
     int i = 0;
     FILE *file;
     file = fopen("tree.txt", "r");
@@ -20,9 +20,9 @@ int read_file(struct ASCII_Code codes[]) {
     }
     while (fgets(line, sizeof(line), file)) {
         char *token;
-        token = strtok(line, "->");
+        token = strtok(line, " ");
         codes[i].ascii = atoi(token);
-        token = strtok(NULL, "->");
+        token = strtok(NULL, " ");
         strcpy(codes[i].binary, token);
         i++;
     }
